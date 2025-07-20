@@ -9,7 +9,7 @@
         <template v-if="true">
           <li><a href="javascript:;"><i class="iconfont icon-user"></i>周杰伦</a></li>
           <li>
-            <el-popconfirm title="确认退出吗?" confirm-button-text="确认" cancel-button-text="取消">
+            <el-popconfirm title="确认退出吗?" confirm-button-text="确认" cancel-button-text="取消" placement="bottom">
               <template #reference>
                 <a href="javascript:;">退出登录</a>
               </template>
@@ -53,7 +53,7 @@
           color: $xtxColor;
         }
       }
-
+      // ~li可以选择除了第一个li以外的li
       ~li {
         a {
           border-left: 2px solid #666;
