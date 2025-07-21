@@ -23,7 +23,7 @@ const categoryStore = useCategoryStore();
         <input type="text" placeholder="搜一搜">
       </div>
       <!-- 头部购物车 -->
-      
+
     </div>
   </header>
 </template>
@@ -57,24 +57,24 @@ const categoryStore = useCategoryStore();
     padding-left: 40px;
     position: relative;
     z-index: 998;
-  
+
     li {
       margin-right: 40px;
       width: 38px;
       text-align: center;
-  
+
       a {
         font-size: 16px;
         line-height: 32px;
         height: 32px;
         display: inline-block;
-  
+
         &:hover {
           color: $xtxColor;
           border-bottom: 1px solid $xtxColor;
         }
       }
-  
+
       .active {
         color: $xtxColor;
         border-bottom: 1px solid $xtxColor;
