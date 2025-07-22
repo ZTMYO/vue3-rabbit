@@ -3,6 +3,7 @@ import { getDetail } from '@/apis/detail'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import DetailHot from './components/DetailHot.vue'
+import ImageView from '@/components/ImageView/index.vue'
 const goods = ref({})
 const route = useRoute()
 const getGoods = async () => {
@@ -33,7 +34,7 @@ onMounted(() => getGoods())
                     <div class="goods-info">
                         <div class="media">
                             <!-- 图片预览区 -->
-
+                            <ImageView />
                             <!-- 统计数量 -->
                             <ul class="goods-sales">
                                 <li>
@@ -53,7 +54,7 @@ onMounted(() => getGoods())
                                 </li>
                                 <li>
                                     <p>品牌信息</p>
-                                    <p>{{goods.brand && goods.brand.name ? goods.brand.name : '无'}}</p>
+                                    <p>{{ goods.brand && goods.brand.name ? goods.brand.name : '无' }}</p>
                                     <p><i class="iconfont icon-dynamic-filling"></i>品牌主页</p>
                                 </li>
                             </ul>
@@ -61,10 +62,10 @@ onMounted(() => getGoods())
                         <div class="spec">
                             <!-- 商品信息区 -->
                             <p class="g-name"> {{ goods.name }} </p>
-                            <p class="g-desc">{{goods.desc}} </p>
+                            <p class="g-desc">{{ goods.desc }} </p>
                             <p class="g-price">
                                 <span>{{ goods.price }}</span>
-                                <span> {{goods.oldPrice}}</span>
+                                <span> {{ goods.oldPrice }}</span>
                             </p>
                             <div class="g-service">
                                 <dl>
@@ -105,8 +106,8 @@ onMounted(() => getGoods())
                                     <!-- 属性 -->
                                     <ul class="attrs">
                                         <li v-for="item in goods.details.properties" :key="item.value">
-                                            <span class="dt">{{item.name}}</span>
-                                            <span class="dd">{{item.values}}</span>
+                                            <span class="dt">{{ item.name }}</span>
+                                            <span class="dd">{{ item.values }}</span>
                                         </li>
                                     </ul>
                                     <!-- 图片 -->
@@ -117,9 +118,9 @@ onMounted(() => getGoods())
                         <!-- 24热榜+专题推荐 -->
                         <div class="goods-aside">
                             <!-- 24小时 -->
-                            <DetailHot :hot-type="1"/>
+                            <DetailHot :hot-type="1" />
                             <!-- 周 -->
-                            <DetailHot :hot-type="2"/>
+                            <DetailHot :hot-type="2" />
                         </div>
                     </div>
                 </div>
