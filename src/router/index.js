@@ -36,6 +36,10 @@ const router = createRouter({
       component: Login
     }
   ],
+  // 路由行为配置,实现切换页面后自动滚动到顶部
+  scrollBehavior() {
+    return { top: 0 }
+  }
 })
 
 export default router
