@@ -1,14 +1,14 @@
 <script setup>
-import { onMounted, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { useMouseInElement } from '@vueuse/core'
-// 图片列表
-const imageList = [
-    "https://yanxuan-item.nosdn.127.net/d917c92e663c5ed0bb577c7ded73e4ec.png",
-    "https://yanxuan-item.nosdn.127.net/e801b9572f0b0c02a52952b01adab967.jpg",
-    "https://yanxuan-item.nosdn.127.net/b52c447ad472d51adbdde1a83f550ac2.jpg",
-    "https://yanxuan-item.nosdn.127.net/f93243224dc37674dfca5874fe089c60.jpg",
-    "https://yanxuan-item.nosdn.127.net/f881cfe7de9a576aaeea6ee0d1d24823.jpg"
-]
+
+//props适配图片列表
+defineProps({
+    imageList: {
+        type: Array,
+        default: () => []
+    }
+})
 //小图切换大图显示
 const activeIndex = ref(0)
 const enterHandle = (index) => {
@@ -21,8 +21,8 @@ const { elementX, elementY, isOutside } = useMouseInElement(target)
 const left = ref(0)
 const top = ref(0)
 //大图的两个坐标
-var positionX = ref(0)
-var positionY = ref(0)
+const positionX = ref(0)
+const positionY = ref(0)
 watch([elementX, elementY, isOutside], () => {
     //如果鼠标没有在图片区域内，则不进行计算
     if (isOutside.value) {
@@ -41,8 +41,8 @@ watch([elementX, elementY, isOutside], () => {
     if (elementX < 100) { left = 0 }
     if (elementY < 100) { top = 0 }
     //控制大图的显示
-    positionX = -left.value * 2
-    positionY = -top.value * 2
+    positionX.value = -left.value * 2
+    positionY.value = -top.value * 2
 
 
 
