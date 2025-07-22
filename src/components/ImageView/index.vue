@@ -1,6 +1,6 @@
 <script setup>
-import { onMounted,ref } from 'vue'
-
+import { onMounted, ref, watch } from 'vue'
+import { useMouseInElement } from '@vueuse/core'
 // 图片列表
 const imageList = [
     "https://yanxuan-item.nosdn.127.net/d917c92e663c5ed0bb577c7ded73e4ec.png",
@@ -14,9 +14,41 @@ const activeIndex = ref(0)
 const enterHandle = (index) => {
     activeIndex.value = index
 }
+// 获取鼠标相对位置
+const target = ref(null)
+const { elementX, elementY, isOutside } = useMouseInElement(target)
+// 滑块的坐标
+const left = ref(0)
+const top = ref(0)
+//大图的两个坐标
+var positionX = ref(0)
+var positionY = ref(0)
+watch([elementX, elementY, isOutside], () => {
+    //如果鼠标没有在图片区域内，则不进行计算
+    if (isOutside.value) {
+        return
+    }
+    //有效移动范围内的计算逻辑
+    if (elementX.value > 100 && elementX.value < 300) {
+        left.value = elementX.value - 100
+    }
+    if (elementY.value > 100 && elementY.value < 300) {
+        top.value = elementY.value - 100
+    }
+    // 鼠标移出图片区域
+    if (elementX > 300) { left = 200 }
+    if (elementY > 300) { top = 200 }
+    if (elementX < 100) { left = 0 }
+    if (elementY < 100) { top = 0 }
+    //控制大图的显示
+    positionX = -left.value * 2
+    positionY = -top.value * 2
 
 
 
+
+
+})
 </script>
 
 
@@ -26,11 +58,12 @@ const enterHandle = (index) => {
         <div class="middle" ref="target">
             <img :src="imageList[activeIndex]" alt="" />
             <!-- 蒙层小滑块 -->
-            <div class="layer" :style="{ left: `0px`, top: `0px` }"></div>
+            <div class="layer" :style="{ left: `${left}px`, top: `${top}px` }" v-show="!isOutside"></div>
         </div>
         <!-- 小图列表 -->
         <ul class="small">
-            <li v-for="(img, i) in imageList" :key="i" @mouseenter="enterHandle(i)" :class="{active: i === activeIndex}">
+            <li v-for="(img, i) in imageList" :key="i" @mouseenter="enterHandle(i)"
+                :class="{ active: i === activeIndex }">
                 <img :src="img" alt="" />
             </li>
         </ul>
@@ -38,10 +71,10 @@ const enterHandle = (index) => {
         <div class="large" :style="[
             {
                 backgroundImage: `url(${imageList[activeIndex]})`,
-                backgroundPositionX: `0px`,
-                backgroundPositionY: `0px`,
+                backgroundPositionX: `${positionX}px`,
+                backgroundPositionY: `${positionY}px`,
             },
-        ]" v-show="false"></div>
+        ]" v-show="!isOutside"></div>
     </div>
 </template>
 
@@ -80,6 +113,7 @@ const enterHandle = (index) => {
         left: 0;
         top: 0;
         position: absolute;
+        cursor: move;
     }
 
     .small {
