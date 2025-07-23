@@ -16,9 +16,14 @@ export const useCartStore = defineStore('cart', () => {
             cartList.value.push(goods)
         }
     }
+    // 删除购物车
+    const delCart = (skuId) => {
+        cartList.value = cartList.value.filter(item => item.skuId !== skuId)
+    }
     return {
         cartList,
-        addCart
+        addCart,
+        delCart
     }
 }, {
     persist: true
