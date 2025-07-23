@@ -1,5 +1,10 @@
 <script setup>
 import { ref } from 'vue'
+import { loginAPI } from '@/apis/user'
+import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import 'element-plus/theme-chalk/el-message.css'
+
 // 表单校验（账号名+密码）
 // 准备表单对象
 const form = ref({
@@ -14,22 +19,38 @@ const rules = {
     ],
     password: [
         { required: true, message: "密码不能为空", trigger: 'blur' },
-        { min: 6, max: 14, required: true, message: "密码长度为6-14位字符", trigger: 'blur' },
+        { min: 6, required: true, message: "密码长度至少6位字符", trigger: 'blur' },
     ],
     agree: [
         {
             validator: (rule, value, callback) => {
                 //自定义校验逻辑
                 // 勾选就通过 不勾选就不通过
-                if(value){
+                if (value) {
                     callback()
                 }
-                else{
+                else {
                     callback(new Error('请同意隐私条款和服务条款'))
                 }
             }
         }
     ]
+}
+// 获取form示例做统一校验
+const formRef = ref(null)
+const router = useRouter()
+const doLogin = () => {
+    // 调用实例方法
+    formRef.value.validate(async(valid) => {
+        if (valid) {
+            const res = await loginAPI(form.value)
+            console.log('登陆成功!')
+            //提示用户
+            ElMessage.success('登陆成功!')
+            // 跳转首页
+            router.replace({path:'/'})
+        }
+    })
 }
 </script>
 
@@ -55,7 +76,8 @@ const rules = {
                 </nav>
                 <div class="account-box">
                     <div class="form">
-                        <el-form :model="form" :rules="rules" label-position="right" label-width="60px" status-icon>
+                        <el-form ref="formRef" :model="form" :rules="rules" label-position="right" label-width="60px"
+                            status-icon>
                             <el-form-item prop="account" label="账户">
                                 <el-input v-model="form.account" :clearable=true />
                             </el-form-item>
@@ -67,7 +89,7 @@ const rules = {
                                     我已同意隐私条款和服务条款
                                 </el-checkbox>
                             </el-form-item>
-                            <el-button size="large" class="subBtn">点击登录</el-button>
+                            <el-button size="large" class="subBtn" @click="doLogin">点击登录</el-button>
                         </el-form>
                     </div>
                 </div>
