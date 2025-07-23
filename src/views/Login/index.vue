@@ -1,10 +1,10 @@
 <script setup>
 import { ref } from 'vue'
-import { loginAPI } from '@/apis/user'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/el-message.css'
 
+import { useUserStore } from '@/stores/user'
 // 表单校验（账号名+密码）
 // 准备表单对象
 const form = ref({
@@ -41,14 +41,13 @@ const formRef = ref(null)
 const router = useRouter()
 const doLogin = () => {
     // 调用实例方法
-    formRef.value.validate(async(valid) => {
+    formRef.value.validate(async (valid) => {
         if (valid) {
-            const res = await loginAPI(form.value)
-            console.log('登陆成功!')
+            await useUserStore().getUserInfo(form.value)
             //提示用户
             ElMessage.success('登陆成功!')
             // 跳转首页
-            router.replace({path:'/'})
+            router.replace({ path: '/' })
         }
     })
 }
