@@ -399,7 +399,6 @@ const addCart = () => {
     margin-top: 20px;
 
 }
-
 .bread-container {
     padding: 25px 0;
 }

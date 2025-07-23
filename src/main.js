@@ -5,6 +5,7 @@ import { createPinia } from 'pinia'
 import piniaPlugunPersistedstate from 'pinia-plugin-persistedstate'
 import App from './App.vue'
 import router from './router'
+import 'element-plus/theme-chalk/src/index.scss'
 //引入初始化样式文件
 import '@/styles/common.scss'
 // 引入懒加载指令插件并且注册
