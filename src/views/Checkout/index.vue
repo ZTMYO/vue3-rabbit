@@ -10,7 +10,7 @@ const curAddress = ref({}) // 默认地址
 const getCheckInfo = async () => {
     const res = await getCheckInfoAPI()
     checkInfo.value = res.result
-    console.log("goods",checkInfo.value.goods)
+    console.log("goods", checkInfo.value.goods)
     // 适配默认地址
     const item = checkInfo.value.userAddresses.find(item => item.isDefault === 0)
     curAddress.value = item || {}
@@ -85,7 +85,7 @@ const createOrder = async () => {
         {
             path: '/pay',
             query: {
-                orderId
+                id: orderId
             }
         }
     )
