@@ -1,15 +1,19 @@
 <script setup>
-import { getCheckInfoAPI } from '@/apis/checkout'
 import { ref, onMounted } from 'vue'
+import { getCheckInfoAPI, addAddressAPI, createOrderAPI } from '@/apis/checkout'
+import { useRouter } from 'vue-router'
+import { useCartStore } from '@/stores/cartStore'
+const cartStore = useCartStore()
+const router = useRouter()
 const checkInfo = ref({})  // 订单对象
 const curAddress = ref({}) // 默认地址
 const getCheckInfo = async () => {
     const res = await getCheckInfoAPI()
     checkInfo.value = res.result
+    console.log("goods",checkInfo.value.goods)
     // 适配默认地址
     const item = checkInfo.value.userAddresses.find(item => item.isDefault === 0)
     curAddress.value = item || {}
-    console.log("curAddress", curAddress.value)
 }
 onMounted(() => getCheckInfo())
 // 控制弹框打开
@@ -23,7 +27,71 @@ const confirm = () => {
     curAddress.value = activeAddress.value
     showDialog.value = false
 }
+const addFlag = ref(false)
+const addForm = ref({
+    receiver: '',
+    contact: '',
+    provinceCode: '',
+    cityCode: '',
+    countyCode: '',
+    address: '',
+    postalCode: '',
+    addressTags: '',
+    isDefault: 0
+})
+const addLoading = ref(false)
+const resetAddForm = () => {
+    addForm.value = {
+        receiver: '',
+        contact: '',
+        provinceCode: '',
+        cityCode: '',
+        countyCode: '',
+        address: '',
+        postalCode: '',
+        addressTags: '',
+        isDefault: 0
+    }
+}
+const handleAddAddress = async () => {
+    addLoading.value = true
+    try {
+        await addAddressAPI(addForm.value)
+        addFlag.value = false
+        resetAddForm()
+        await getCheckInfo()
+    } finally {
+        addLoading.value = false
+    }
+}
 
+// 创建订单
+const createOrder = async () => {
+    const res = await createOrderAPI({
+        deliveryTimeType: 1,
+        payType: 1,
+        payChannel: 1,
+        buyerMessage: '',
+        goods: checkInfo.value.goods.map(item => {
+            return {
+                skuId: item.skuId,
+                count: item.count
+            }
+        }),
+        addressId: curAddress.value.id
+    })
+    const orderId = res.result.id
+    router.push(
+        {
+            path: '/pay',
+            query: {
+                orderId
+            }
+        }
+    )
+    //更新购物车
+    cartStore.updateNewList()
+}
 </script>
 
 <template>
@@ -118,7 +186,7 @@ const confirm = () => {
                 </div>
                 <!-- 提交订单 -->
                 <div class="submit">
-                    <el-button type="primary" size="large">提交订单</el-button>
+                    <el-button type="primary" size="large" @click="createOrder">提交订单</el-button>
                 </div>
             </div>
         </div>
@@ -126,7 +194,8 @@ const confirm = () => {
     <!-- 切换地址 -->
     <el-dialog v-model="showDialog" title="切换收货地址" width="30%" center>
         <div class="addressWrapper">
-            <div class="text item" :class="{active:activeAddress===item }" @click="switchAddress(item)" v-for="item in checkInfo.userAddresses" :key="item.id">
+            <div class="text item" :class="{ active: activeAddress === item }" @click="switchAddress(item)"
+                v-for="item in checkInfo.userAddresses" :key="item.id">
                 <ul>
                     <li><span>收<i />货<i />人：</span>{{ item.receiver }} </li>
                     <li><span>联系方式：</span>{{ item.contact }}</li>
@@ -136,12 +205,49 @@ const confirm = () => {
         </div>
         <template #footer>
             <span class="dialog-footer">
-                <el-button>取消</el-button>
+                <el-button @click="showDialog = false">取消</el-button>
                 <el-button type="primary" @click="confirm()">确定</el-button>
             </span>
         </template>
     </el-dialog>
     <!-- 添加地址 -->
+    <el-dialog v-model="addFlag" title="添加收货地址" width="30%" center @close="resetAddForm">
+        <el-form :model="addForm" label-width="80px">
+            <el-form-item label="收货人">
+                <el-input v-model="addForm.receiver" />
+            </el-form-item>
+            <el-form-item label="手机号">
+                <el-input v-model="addForm.contact" />
+            </el-form-item>
+            <el-form-item label="省">
+                <el-input v-model="addForm.provinceCode" />
+            </el-form-item>
+            <el-form-item label="市">
+                <el-input v-model="addForm.cityCode" />
+            </el-form-item>
+            <el-form-item label="区/县">
+                <el-input v-model="addForm.countyCode" />
+            </el-form-item>
+            <el-form-item label="详细地址">
+                <el-input v-model="addForm.address" />
+            </el-form-item>
+            <el-form-item label="邮编">
+                <el-input v-model="addForm.postalCode" />
+            </el-form-item>
+            <el-form-item label="标签">
+                <el-input v-model="addForm.addressTags" />
+            </el-form-item>
+            <el-form-item label="设为默认">
+                <el-switch v-model="addForm.isDefault" :active-value="1" :inactive-value="0" />
+            </el-form-item>
+        </el-form>
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="addFlag = false">取消</el-button>
+                <el-button type="primary" :loading="addLoading" @click="handleAddAddress">确定</el-button>
+            </span>
+        </template>
+    </el-dialog>
 </template>
 
 <style scoped lang="scss">
