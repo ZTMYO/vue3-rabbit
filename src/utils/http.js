@@ -1,7 +1,7 @@
 // axios基础的封装
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/userStore'
 import router from '@/router'
 import 'element-plus/theme-chalk/el-message.css'
 const httpInstance = axios.create({
@@ -35,7 +35,7 @@ httpInstance.interceptors.response.use(res => res.data, e => {
         userStore.clearUserInfo()
         router.push('/login')
     }
-    
+
     return Promise.reject(e)
 })
 

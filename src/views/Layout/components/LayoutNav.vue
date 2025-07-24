@@ -1,14 +1,14 @@
 <script setup>
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/userStore'
 import { useRouter } from 'vue-router'
 const userStore = useUserStore()
 const router = useRouter()
 const confirm = () => {
-    ElMessage.success('退出成功!')
-    // 清除当前用户信息
-    userStore.clearUserInfo()
-    // 跳转登录页面
-    router.push('/login')
+  ElMessage.success('退出成功!')
+  // 清除当前用户信息
+  userStore.clearUserInfo()
+  // 跳转登录页面
+  router.push('/login')
 }
 </script>
 
@@ -18,9 +18,10 @@ const confirm = () => {
       <ul>
         <!-- 适配思路：登录时显示第一块，未登录时显示第二块 -->
         <template v-if="userStore.userInfo.token">
-          <li><a href="javascript:;"><i class="iconfont icon-user"></i>{{userStore.userInfo.nickname}}</a></li>
+          <li><a href="javascript:;"><i class="iconfont icon-user"></i>{{ userStore.userInfo.nickname }}</a></li>
           <li>
-            <el-popconfirm title="确认退出吗?" confirm-button-text="确认" cancel-button-text="取消" placement="bottom" @confirm="confirm">
+            <el-popconfirm title="确认退出吗?" confirm-button-text="确认" cancel-button-text="取消" placement="bottom"
+              @confirm="confirm">
               <template #reference>
                 <a href="javascript:;">退出登录</a>
               </template>
@@ -43,11 +44,13 @@ const confirm = () => {
 <style scoped lang="scss">
 .app-topnav {
   background: #333;
+
   ul {
     display: flex;
     height: 53px;
     justify-content: flex-end;
     align-items: center;
+
     li {
       a {
         padding: 0 15px;
@@ -64,6 +67,7 @@ const confirm = () => {
           color: $xtxColor;
         }
       }
+
       // ~li可以选择除了第一个li以外的li
       ~li {
         a {

@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/userStore'
 // 表单校验（账号名+密码）
 // 准备表单对象
 const form = ref({
@@ -80,7 +80,8 @@ const doLogin = () => {
                                 <el-input v-model="form.account" :clearable=true />
                             </el-form-item>
                             <el-form-item prop="password" label="密码">
-                                <el-input v-model="form.password" :clearable=true :show-password=false @keyup.enter="doLogin" />
+                                <el-input v-model="form.password" :clearable=true :show-password=false
+                                    @keyup.enter="doLogin" />
                             </el-form-item>
                             <el-form-item prop="agree" label-width="22px">
                                 <el-checkbox size="large" v-model="form.agree">
