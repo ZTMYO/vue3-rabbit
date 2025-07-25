@@ -1,5 +1,4 @@
 <script setup>
-import { onMounted, ref } from 'vue';
 import { useCategoryStore } from '@/stores/categoryStore';
 import HeaderCart from './HeaderCart.vue'
 const categoryStore = useCategoryStore();
