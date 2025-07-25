@@ -1,5 +1,5 @@
 <script setup>
-import { ref,onMounted } from "vue"
+import { ref, onMounted } from "vue"
 import { getUserOrder } from "@/apis/order"
 // tab列表
 const tabTypes = [
@@ -15,29 +15,42 @@ const tabTypes = [
 const orderList = ref([])
 const total = ref(0)
 const params = ref({
-  orderState:0,
-  page:1,
-  pageSize:2
+  orderState: 0,
+  page: 1,
+  pageSize: 2
 })
-const getUserOrderList = async () => { 
+const getUserOrderList = async () => {
   const res = await getUserOrder(params.value)
   orderList.value = res.result.items
   total.value = res.result.counts
 }
-onMounted(()=>{
+onMounted(() => {
   getUserOrderList()
 })
 
 //  tab切换
-const tabChange = (type) => { 
+const tabChange = (type) => {
   params.value.orderState = type
   getUserOrderList()
 }
 
 // 分页切换
-const pageChange = (page) => { 
+const pageChange = (page) => {
   params.value.page = page
   getUserOrderList()
+}
+
+// 创建格式化函数
+const fomartPayState = (payState) => {
+  const stateMap = {
+    1: '待付款',
+    2: '待发货',
+    3: '待收货',
+    4: '待评价',
+    5: '已完成',
+    6: '已取消'
+  }
+  return stateMap[payState]
 }
 </script>
 
@@ -84,7 +97,7 @@ const pageChange = (page) => {
                 </ul>
               </div>
               <div class="column state">
-                <p>{{ order.orderState }}</p>
+                <p>{{ fomartPayState(order.orderState)}}</p>
                 <p v-if="order.orderState === 3">
                   <a href="javascript:;" class="green">查看物流</a>
                 </p>
@@ -120,7 +133,8 @@ const pageChange = (page) => {
           </div>
           <!-- 分页 -->
           <div class="pagination-container">
-            <el-pagination :total="total" :page-size="params.pageSize" @current-change="pageChange" background layout="prev, pager, next" />
+            <el-pagination :total="total" :page-size="params.pageSize" @current-change="pageChange" background
+              layout="prev, pager, next" />
           </div>
         </div>
       </div>
