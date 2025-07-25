@@ -1,35 +1,30 @@
-# vue3-rabbit
+# 小兔鲜儿（vue3-rabbit）
 
-This template should help get you started developing with Vue 3 in Vite.
+## 项目简介
 
-## Recommended IDE Setup
+小兔鲜儿是一个基于 Vue3 + Pinia + Element Plus + Vite 构建的前端电商平台项目，主要实现了电商购物的核心流程和常见功能，适合作为中大型前端项目的学习和实践案例。
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## 主要功能
+- 首页：商品推荐、分类导航、轮播图等
+- 分类页：商品多级分类浏览
+- 商品详情页：商品信息、规格选择、加入购物车
+- 购物车：商品管理、批量操作
+- 结算页：收货地址、订单确认、下单
+- 支付页：订单支付、支付倒计时
+- 会员中心：个人信息、订单管理、地址管理
+- 登录/注册：账号登录
 
-## Customize configuration
+## 技术栈
+- Vue3
+- Pinia 状态管理
+- Vue Router 路由管理
+- Element Plus UI 组件库
+- Vite 前端构建工具
+- Axios 网络请求
+- SCSS 预处理器
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+## 适用场景
+- 前端进阶学习
+- 电商项目实战
+- Vue3 生态体验
 
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
