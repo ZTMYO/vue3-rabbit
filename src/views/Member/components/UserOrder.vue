@@ -13,7 +13,7 @@ const tabTypes = [
 ]
 
 const orderList = ref([])
-
+const total = ref(0)
 const params = ref({
   orderState:0,
   page:1,
@@ -22,6 +22,7 @@ const params = ref({
 const getUserOrderList = async () => { 
   const res = await getUserOrder(params.value)
   orderList.value = res.result.items
+  total.value = res.result.counts
 }
 onMounted(()=>{
   getUserOrderList()
@@ -33,6 +34,11 @@ const tabChange = (type) => {
   getUserOrderList()
 }
 
+// 分页切换
+const pageChange = (page) => { 
+  params.value.page = page
+  getUserOrderList()
+}
 </script>
 
 <template>
@@ -114,7 +120,7 @@ const tabChange = (type) => {
           </div>
           <!-- 分页 -->
           <div class="pagination-container">
-            <el-pagination background layout="prev, pager, next" />
+            <el-pagination :total="total" :page-size="params.pageSize" @current-change="pageChange" background layout="prev, pager, next" />
           </div>
         </div>
       </div>
